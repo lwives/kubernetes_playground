@@ -20,5 +20,5 @@
       ]
     }
   },
-  // "postCreateCommand": "minikube start --driver=docker"
+  "postCreateCommand": "minikube start --driver=docker"
 }
