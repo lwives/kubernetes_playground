@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service-deployment
+  labels:
+    app: order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order-service
+          image: order-service:latest # Nome da imagem Docker local
+          imagePullPolicy: IfNotPresent  # Busca imagem local 
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              value: postgresql://user:password@postgres-service:5432/mydatabase
+            - name: PRODUCT_SERVICE_URL # O Order Service se conecta ao Service do Product Service
+              value: http://product-service-clusterip:8002 # Usamos o nome do Service Kubernetes
+    

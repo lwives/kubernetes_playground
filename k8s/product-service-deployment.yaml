@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-service-deployment
+  labels:
+    app: product-service
+spec:
+  replicas: 2 # <-- Duas cópias do serviço de produtos!
+  selector:
+    matchLabels:
+      app: product-service
+  template:
+    metadata:
+      labels:
+        app: product-service
+    spec:
+      containers:
+        - name: product-service
+          image: product-service:latest # Nome da imagem Docker local
+          imagePullPolicy: IfNotPresent  # Busca a imagem localmente se disponível 
+          ports:
+            - containerPort: 8002
+          env:
+            - name: DATABASE_URL
+              value: postgresql://user:password@postgres-service:5432/mydatabase # Conecta ao Service do PostgreSQL
