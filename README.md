@@ -1,4 +1,4 @@
-# 🐳 Laboratório de Docker & Kubernetes
+# 🐳 Laboratório de Kubernetes
 
 Bem-vindo ao seu ambiente prático de desenvolvimento! Este repositório utiliza o **GitHub Codespaces** para fornecer uma máquina Linux virtual completa na nuvem, com todas as ferramentas necessárias já instaladas e configuradas.
 
@@ -24,47 +24,13 @@ source ./test-env.sh
 ```
 
 > 💡 **Nota:** Se todos os itens exibirem `[ OK ]` em verde, seu ambiente está pronto!
->
-> O minikube (engine Kubernetes) está desligado por default, para não consumir memória nem perdermos tempo na inicialização.
-> Para ativá-lo, digite o seguinte no terminal:
-
-```bash
-minikube start --driver=docker
-```
-
 
 ---
 
 ## 🛠️ Exercícios Práticos
 
-### Prática 1: Testando o Docker (CLI)
-Crie e execute uma imagem Linux minimalista para validar o isolamento de contêineres:
-```bash
-docker build -t meu-primeiro-container .
-docker run -d -p 8000:8000 meu-primeiro-container
-```
-
-### Prática 2: Testando o Docker Compose
-Suba um servidor web Nginx estruturado em segundo plano:
-```bash
-docker compose up -d
-```
-* O VS Code exibirá uma notificação no canto inferior direito informando que a porta `8080` foi encaminhada.
-* Clique em **Open in Browser** para acessar a página padrão do Nginx diretamente do seu navegador.
-* Para derrubar o ambiente ao final do exercício: `docker compose down`
-
-### Prática 3: Testando o Kubernetes (K8s)
-O cluster local **Minikube** já inicia integrado ao Docker. Valide o estado do cluster:
-```bash
-kubectl get nodes
-kubectl get pods -A
-```
-
-Crie um cluster com base no arquivo `k8s/pod.yaml`:
-```bash
-kubectl apply -f k8s/pod.yaml
-kubectl get pods
-```
+1. Execute create_images.sh (source create_images.sh)
+2. Inicialize a infraestrutura (source init_containers.sh).
 
 ---
 
