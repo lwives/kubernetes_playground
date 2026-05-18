@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graphql-gateway-deployment
+  labels:
+    app: graphql-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: graphql-gateway
+  template:
+    metadata:
+      labels:
+        app: graphql-gateway
+    spec:
+      containers:
+        - name: graphql-gateway
+          image: graphql-api-gateway:latest # Nome da imagem Docker local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9004
+          env:
+            - name: PRODUCT_SERVICE_URL
+              value: http://product-service-clusterip:8002 # Conecta ao Service do Product Service
+            - name: ORDER_SERVICE_URL
+              value: http://order-service-clusterip:8000   # Conecta ao Service do Order Service
