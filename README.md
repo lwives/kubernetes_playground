@@ -27,10 +27,87 @@ source ./test-env.sh
 
 ---
 
-## 🛠️ Exercícios Práticos
+## 🛠️ Exercícios Práticos (Subir Tudo no Kubernetes)
 
-1. Execute create_images.sh (source create_images.sh)
-2. Inicialize a infraestrutura (source init_containers.sh).
+Siga exatamente esta sequência para evitar erros comuns de `ImagePullBackOff` e de conexão com o cluster.
+
+1. Inicie o cluster local:
+
+```bash
+minikube start --driver=docker
+```
+
+2. Confirme que o Kubernetes está acessível:
+
+```bash
+kubectl cluster-info
+```
+
+3. Gere as imagens Docker dos serviços:
+
+```bash
+source create_images.sh
+```
+
+4. Carregue as imagens locais no Minikube (passo obrigatório neste ambiente):
+
+```bash
+minikube image load product-service:latest order-service:latest graphql-api-gateway:latest
+```
+
+5. Aplique toda a infraestrutura Kubernetes:
+
+```bash
+source init_containers.sh
+```
+
+6. Verifique se os pods ficaram `Running`:
+
+```bash
+kubectl get pods,svc
+```
+
+7. Abra acesso local ao gateway GraphQL (mantenha este terminal aberto):
+
+```bash
+kubectl port-forward service/graphql-gateway-nodeport 9004:9004
+```
+
+8. Em outro terminal, teste consultas GraphQL:
+
+```bash
+curl -sS -X POST 'http://127.0.0.1:9004/graphql/' \
+	-H 'Content-Type: application/json' \
+	--data '{"query":"{ products { id nome preco } orders { id product_id quantidade } }"}'
+```
+
+9. Teste mutation + leitura (escrita no banco + confirmação):
+
+```bash
+curl -sS -X POST 'http://127.0.0.1:9004/graphql/' \
+	-H 'Content-Type: application/json' \
+	--data '{"query":"mutation { createOrder(input: { product_id: 1, quantidade: 2 }) { message pedido { id product_id quantidade } } }"}'
+
+curl -sS -X POST 'http://127.0.0.1:9004/graphql/' \
+	-H 'Content-Type: application/json' \
+	--data '{"query":"{ orders { id product_id quantidade } }"}'
+```
+
+### Problemas comuns
+
+- `no route to host` ao executar `kubectl apply`:
+	Cluster Minikube parado. Rode `minikube start` e tente novamente.
+
+- `ImagePullBackOff` nos pods de aplicação:
+	As imagens não foram carregadas no Minikube. Rode novamente:
+
+```bash
+minikube image load product-service:latest order-service:latest graphql-api-gateway:latest
+kubectl rollout restart deployment product-service-deployment order-service-deployment graphql-gateway-deployment
+```
+
+- `curl` sem resposta em `/graphql`:
+	Use `/graphql/` (com barra final), ou siga redirecionamento HTTP.
 
 ---
 

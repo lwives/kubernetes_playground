@@ -1,4 +1,4 @@
-// Criado com auxílio do Google Gemini
+# Criado com auxílio do Google Gemini
 from fastapi import FastAPI, HTTPException
 from ariadne import QueryType, MutationType, make_executable_schema, load_schema_from_path
 from ariadne.graphql import GraphQLError
