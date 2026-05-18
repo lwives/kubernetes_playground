@@ -1,0 +1,42 @@
+# --- Tipos de Dados ---
+
+type Product {
+  id: Int!
+  nome: String!
+  preco: Float!
+  quantidade: Int! # Representa o estoque
+}
+
+type Pedido {
+  id: Int! 
+  product_id: Int!
+  quantidade: Int!
+}
+
+# --- Input Types para Mutações ---
+
+input CreateOrderInput {
+  product_id: Int!
+  quantidade: Int!
+}
+
+# --- Queries (Buscas de Dados) ---
+
+type Query {
+  products: [Product!]!
+  product(id: Int!): Product
+  orders: [Pedido!]!
+}
+
+# --- Mutations (Alterações de Dados) ---
+
+type Mutation {
+  createOrder(input: CreateOrderInput!): PedidoResponse!
+}
+
+# --- Respostas de Mutação ---
+
+type PedidoResponse {
+  message: String!
+  pedido: Pedido
+}
